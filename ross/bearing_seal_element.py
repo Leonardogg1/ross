@@ -2306,10 +2306,10 @@ class MagneticBearingElement(BearingElement):
             hovertemplate = f"Tag: {self.tag}<br>" + hovertemplate
 
 
-        if ki is not None and ks is not None:
+        if self.ki is not None and self.ks is not None:
             hovertemplate += (
-            f"Current Gain (ki): {self.ki:.3f}"
-            f"Negative Stiffiness Gain (ks): {self.ks:.3f}"
+            f"Current-to-Force Gain (ki): {self.ki:.3e} N/A<br>"
+            f"Negative Stiffness (ks): {self.ks:.3e} N/m<br>"
             f"PID Kp: {self.kp_pid:.3e}<br>"
             f"PID Kd: {self.kd_pid:.3e}<br>"
             f"Kxx: {self.kxx[0]:.3e} N/m<br>"
