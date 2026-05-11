@@ -2094,6 +2094,8 @@ class MagneticBearingElement(BearingElement):
     def __init__(
         self,
         n,
+        ki,
+        ks,
         g0,
         i0,
         ag,
@@ -2114,6 +2116,8 @@ class MagneticBearingElement(BearingElement):
         color="#355d7a",
         **kwargs,
     ):
+        self.ki = is_scalar(ki,"ki")
+        self.ks = is_scalar(ks,"ks")
         self.g0 = is_scalar(g0, "g0")
         self.i0 = is_scalar_or_list(i0, 2, "i0")
         self.ag = is_scalar(ag, "ag")
@@ -2154,7 +2158,7 @@ class MagneticBearingElement(BearingElement):
         # From: "Magnetic Bearings. Theory, Design, and Application to Rotating Machinery"
         # Authors: Gerhard Schweitzer and Eric H. Maslen
         # Page: 343
-        ks = (
+        ks = ks if ks is not None else(
             -4.0
             * self.i0**2.0
             * np.cos(self.alpha)
@@ -2166,7 +2170,7 @@ class MagneticBearingElement(BearingElement):
             / (4.0 * self.g0**3)
         )
 
-        ki = (
+        ki = ki if ki is not None else(
             4.0
             * self.i0
             * np.cos(self.alpha)
@@ -2301,7 +2305,20 @@ class MagneticBearingElement(BearingElement):
         if self.tag is not None:
             hovertemplate = f"Tag: {self.tag}<br>" + hovertemplate
 
-        hovertemplate += (
+
+        if ki is not None and ks is not None:
+            hovertemplate += (
+            f"Current Gain (ki): {self.ki:.3f}"
+            f"Negative Stiffiness Gain (ks): {self.ks:.3f}"
+            f"PID Kp: {self.kp_pid:.3e}<br>"
+            f"PID Kd: {self.kd_pid:.3e}<br>"
+            f"Kxx: {self.kxx[0]:.3e} N/m<br>"
+            f"Kyy: {self.kyy[0]:.3e} N/m<br>"
+            f"Cxx: {self.cxx[0]:.3e} N·s/m<br>"
+            f"Cyy: {self.cyy[0]:.3e} N·s/m<br>"
+            )
+        else:
+            hovertemplate += (
             f"Air Gap (g0): {self.g0:.4e} m<br>"
             f"Bias Current (i0): {self.i0:.2f} A<br>"
             f"Pole Area: {self.ag:.4e} m²<br>"
@@ -2312,7 +2329,7 @@ class MagneticBearingElement(BearingElement):
             f"Kyy: {self.kyy[0]:.3e} N/m<br>"
             f"Cxx: {self.cxx[0]:.3e} N·s/m<br>"
             f"Cyy: {self.cyy[0]:.3e} N·s/m<br>"
-        )
+            )
 
         customdata = [self.n]
 
