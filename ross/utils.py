@@ -715,7 +715,7 @@ def get_data_from_figure(fig):
     return df
 
 
-def newmark(func, t, y_size, **options):
+def newmark(func, t, y_size, ic, **options):
     """Transient solution of the dynamic behavior of the system.
 
     Perform numerical integration using the Newmark method with Newton-Raphson
@@ -792,7 +792,7 @@ def newmark(func, t, y_size, **options):
     n_steps = len(t)
     ny = y_size
 
-    y0 = np.zeros(ny)
+    y0 = np.zeros(ny) if ic is None else ic
     ydot0 = np.zeros(ny)
     y2dot0 = np.zeros(ny)
 

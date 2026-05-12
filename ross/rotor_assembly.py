@@ -2481,7 +2481,7 @@ class Rotor(object):
 
         return M @ gravity
 
-    def integrate_system(self, speed, F, t, **kwargs):
+    def integrate_system(self, speed, F, t, ic, **kwargs):
         """Time integration for a rotor system.
 
         This method returns the time response for a rotor given a force, time and
@@ -2631,7 +2631,7 @@ class Rotor(object):
         )
 
         size = F.shape[1]
-        response = newmark(rotor_system, t, size, **kwargs)
+        response = newmark(rotor_system, t, size, ic, **kwargs)
         yout = reduction[2](response.T).T
         return t, yout
 
@@ -2827,7 +2827,7 @@ class Rotor(object):
         """
 
         if isinstance(speed, Iterable) or method.lower() == "newmark":
-            t_, yout = self.integrate_system(speed, F, t, **kwargs)
+            t_, yout = self.integrate_system(speed, F, t, ic, **kwargs)
             return t_, yout, []
 
         else:
